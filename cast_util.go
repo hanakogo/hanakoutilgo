@@ -3,7 +3,6 @@ package ohanakoutilgo
 import (
 	"fmt"
 	"github.com/ohanakogo/errhandlergo"
-	"math"
 	"reflect"
 )
 
@@ -47,55 +46,76 @@ func CastToString(obj any) (result string) {
 
 // CastToNumber cast to any number type, default 0
 func CastToNumber[T int | int8 | int16 | int32 | int64 | uint | uint8 | uint16 | uint32 | uint64 | float32 | float64](obj any) (result T) {
-	// Define a helper function for casting to integers
-	castIntNumber := func(MIN any, MAX any, signed bool) {
-		if signed {
-			CastThen[int64](obj, func(i int64) {
-				if CastTo[int64](MIN) < i && i < CastTo[int64](MIN) {
-					result = T(obj)
-				} else {
-					result = 0
-				}
-			})
-		} else {
-			CastThen[uint64](obj, func(i uint64) {
-				if CastTo[uint64](MIN) <= i && i <= CastTo[uint64](MIN) {
-					result = T(obj)
-				} else {
-					result = 0
-				}
-			})
-		}
-	}
+	// Set default returns value
+	result = 0
 
 	// Check for integer types
 	switch {
 	case Is[int](obj):
-		castIntNumber(math.MinInt, math.MaxInt, true)
+		CastThen[int](obj, func(i int) {
+			result = T(i)
+		})
+		return
 	case Is[int8](obj):
-		castIntNumber(math.MinInt8, math.MaxInt8, true)
+		CastThen[int8](obj, func(i int8) {
+			result = T(i)
+		})
+		return
 	case Is[int16](obj):
-		castIntNumber(math.MinInt16, math.MaxInt16, true)
+		CastThen[int16](obj, func(i int16) {
+			result = T(i)
+		})
+		return
 	case Is[int32](obj):
-		castIntNumber(math.MinInt32, math.MaxInt32, true)
+		CastThen[int32](obj, func(i int32) {
+			result = T(i)
+		})
+		return
 	case Is[int64](obj):
-		castIntNumber(math.MinInt64, math.MaxInt64, true)
+		CastThen[int64](obj, func(i int64) {
+			result = T(i)
+		})
+		return
 	case Is[uint](obj):
-		castIntNumber(0, math.MaxUint, false)
+		CastThen[uint](obj, func(i uint) {
+			result = T(i)
+		})
+		return
 	case Is[uint8](obj):
-		castIntNumber(0, math.MaxUint8, false)
+		CastThen[uint8](obj, func(i uint8) {
+			result = T(i)
+		})
+		return
 	case Is[uint16](obj):
-		castIntNumber(0, math.MaxUint16, false)
+		CastThen[uint16](obj, func(i uint16) {
+			result = T(i)
+		})
+		return
 	case Is[uint32](obj):
-		castIntNumber(0, math.MaxUint32, false)
+		CastThen[uint32](obj, func(i uint32) {
+			result = T(i)
+		})
+		return
 	case Is[uint64](obj):
-		castIntNumber(0, math.MaxUint64, false)
+		CastThen[uint64](obj, func(i uint64) {
+			result = T(i)
+		})
+		return
 	}
 
 	// Check for floating point types
-	if Is[float32](obj) || Is[float64](obj) {
-		return T(obj)
+	switch {
+	case Is[float32](obj):
+		CastThen[float32](obj, func(f float32) {
+			result = T(f)
+		})
+		return
+	case Is[float64](obj):
+		CastThen[float64](obj, func(f float64) {
+			result = T(f)
+		})
+		return
 	}
 
-	return 0
+	return
 }
