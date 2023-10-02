@@ -3,7 +3,6 @@ package ohanakoutilgo
 import (
 	"fmt"
 	"github.com/ohanakogo/errhandlergo"
-	"reflect"
 )
 
 // CastTo casts an object to a given type T. If the cast is successful, returns the value of the cast object.
@@ -12,7 +11,7 @@ func CastTo[T any](obj any) T {
 	if val, ok := obj.(T); ok {
 		return val
 	}
-	panic(fmt.Sprintf("can't cast object as type<%s>", reflect.TypeOf((*T)(nil)).String()))
+	panic(fmt.Sprintf("can't cast object as type<%s>", TypeOf[T]()))
 }
 
 // CastThen calls a function `then` with the result of casting an object `obj` to type T.
