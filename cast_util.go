@@ -37,6 +37,10 @@ func Is[T any](obj any) (result bool) {
 // Silently recovers from the panic using `errhandlergo`.
 func CastToString(obj any) (result string) {
 	defer errhandlergo.HandleRecover(func(err any) {
+		if val, ok := obj.(fmt.Stringer); ok {
+			result = val.String()
+			return
+		}
 		result = ""
 	})
 	result = CastTo[string](obj)
