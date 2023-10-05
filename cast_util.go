@@ -3,6 +3,7 @@ package ohanakoutilgo
 import (
 	"fmt"
 	"github.com/ohanakogo/errhandlergo"
+	"reflect"
 )
 
 // CastTo casts an object to a given type T. If the cast is successful, returns the value of the cast object.
@@ -49,75 +50,22 @@ func CastToString(obj any) (result string) {
 
 // CastToNumber cast to any number type, default 0
 func CastToNumber[T int | int8 | int16 | int32 | int64 | uint | uint8 | uint16 | uint32 | uint64 | float32 | float64](obj any) (result T) {
-	// Set default returns value
-	result = 0
-
-	// Check for integer types
-	switch {
-	case Is[int](obj):
-		CastThen[int](obj, func(i int) {
-			result = T(i)
-		})
-		return
-	case Is[int8](obj):
-		CastThen[int8](obj, func(i int8) {
-			result = T(i)
-		})
-		return
-	case Is[int16](obj):
-		CastThen[int16](obj, func(i int16) {
-			result = T(i)
-		})
-		return
-	case Is[int32](obj):
-		CastThen[int32](obj, func(i int32) {
-			result = T(i)
-		})
-		return
-	case Is[int64](obj):
-		CastThen[int64](obj, func(i int64) {
-			result = T(i)
-		})
-		return
-	case Is[uint](obj):
-		CastThen[uint](obj, func(i uint) {
-			result = T(i)
-		})
-		return
-	case Is[uint8](obj):
-		CastThen[uint8](obj, func(i uint8) {
-			result = T(i)
-		})
-		return
-	case Is[uint16](obj):
-		CastThen[uint16](obj, func(i uint16) {
-			result = T(i)
-		})
-		return
-	case Is[uint32](obj):
-		CastThen[uint32](obj, func(i uint32) {
-			result = T(i)
-		})
-		return
-	case Is[uint64](obj):
-		CastThen[uint64](obj, func(i uint64) {
-			result = T(i)
-		})
-		return
+	kinds := []reflect.Kind{
+		reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64,
+		reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64,
+		reflect.Float32, reflect.Float64,
 	}
 
-	// Check for floating point types
-	switch {
-	case Is[float32](obj):
-		CastThen[float32](obj, func(f float32) {
-			result = T(f)
-		})
-		return
-	case Is[float64](obj):
-		CastThen[float64](obj, func(f float64) {
-			result = T(f)
-		})
-		return
+	rType := TypeOf[T]()
+	vKind := reflect.TypeOf(obj).Kind()
+
+	for _, kind := range kinds {
+		if kind == vKind {
+			convertValue := reflect.ValueOf(obj).Convert(rType)
+			val := convertValue.Interface()
+			result = CastTo[T](val)
+			break
+		}
 	}
 
 	return
