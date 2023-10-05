@@ -1,8 +1,8 @@
-package ohanakoutilgo
+package hanakoutilgo
 
 import (
 	"fmt"
-	"github.com/ohanakogo/errhandlergo"
+	"github.com/hanakogo/errhandlergo"
 	"reflect"
 )
 

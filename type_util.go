@@ -1,4 +1,4 @@
-package ohanakoutilgo
+package hanakoutilgo
 
 import "reflect"
 
