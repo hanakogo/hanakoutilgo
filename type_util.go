@@ -18,3 +18,22 @@ func ActualTypeOf[T any]() reflect.Type {
 	}
 	return vType
 }
+
+// IsPointer check value is pointer or not
+func IsPointer(v any) bool {
+	if v == nil {
+		return true
+	}
+	return reflect.TypeOf(v).Kind() == reflect.Ptr
+}
+
+// IsNil check value is nil or not
+func IsNil(v any) bool {
+	if !IsPointer(v) {
+		return false
+	}
+	if v == nil {
+		return true
+	}
+	return reflect.ValueOf(v).IsNil()
+}
